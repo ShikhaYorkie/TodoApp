@@ -8,35 +8,41 @@ uuidv4();
 export const TodoWrapper = () => {
   const [todos, setTodos] = useState([]);
 
-  useEffect(() => {
-    const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
-    setTodos(savedTodos);
-  }, []);
+  // Updates the localStorage with the provided todos array in stringified JSON format
+  const updateLocalstorage = (newTodos) => {
+    localStorage.setItem("todos", JSON.stringify(newTodos));
+  };
 
+  // Adds a new todo item to the todos list, assigns a unique ID,
   const addTodo = (todo) => {
     const newTodos = [
       ...todos,
       { id: uuidv4(), task: todo, completed: false, isEditing: false },
     ];
+    console.log("newTodos", newTodos);
 
     setTodos(newTodos);
-    localStorage.setItem("todos", JSON.stringify(newTodos));
+    updateLocalstorage(newTodos);
   };
 
+  // Toggles the "completed" status of a todo item identified by its ID.
   const toggleComplete = (id) => {
     const newTodos = todos.map((todo) =>
       todo.id === id ? { ...todo, completed: !todo.completed } : todo
     );
     setTodos(newTodos);
-    localStorage.setItem("todos", JSON.stringify(newTodos));
+    updateLocalstorage(newTodos);
   };
 
+  // Deletes a todo item identified by its ID from the todos list.
   const deleteTodo = (id) => {
     const newTodos = todos.filter((todo) => todo.id !== id);
+
     setTodos(newTodos);
-    localStorage.setItem("todos", JSON.stringify(newTodos));
+    updateLocalstorage(newTodos);
   };
 
+  // Toggles the "isEditing" status of a todo item identified by its ID.
   const editTodo = (id) => {
     setTodos(
       todos.map((todo) =>
@@ -45,13 +51,19 @@ export const TodoWrapper = () => {
     );
   };
 
+  // Updates the "task" property of a todo item identified by its ID,
   const editTask = (task, id) => {
     const newTodos = todos.map((todo) =>
       todo.id === id ? { ...todo, task, isEditing: !todo.isEditing } : todo
     );
     setTodos(newTodos);
-    localStorage.setItem("todos", JSON.stringify(newTodos));
+    updateLocalstorage(newTodos);
   };
+
+  useEffect(() => {
+    const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
+    setTodos(savedTodos);
+  }, []);
 
   return (
     <div className="TodoWrapper">

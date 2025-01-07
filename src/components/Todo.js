@@ -10,10 +10,12 @@ export const Todo = ({ task, deleteTodo, editTodo, toggleComplete }) => {
       >
         {task.task}
       </p>
+
       <div>
         {!task.completed && (
           <EditFilled className="edit-icon" onClick={() => editTodo(task.id)} />
         )}
+
         <DeleteFilled
           className="delete-icon"
           onClick={() => deleteTodo(task.id)}
